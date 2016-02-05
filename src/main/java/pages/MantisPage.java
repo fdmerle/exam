@@ -13,15 +13,14 @@ import java.util.List;
 /**
  * Created by dmytro_moskalenko2 on 2/3/2016.
  */
-public class MantisPage {
+public class MantisPage extends MainPage {
 
 
-    @FindBy(xpath = ".//*[@id='project-nav']//a[@class='files']")
+    @FindBy(xpath = ".//a[@class='files']")
     private WebElement linkToFiles;
-    @FindBy(xpath = ".//*[@id='files_list']//a[@title='Click to enter mantis-stable']")
+    @FindBy(xpath = ".//a[@title='Click to enter mantis-stable']")
     private WebElement linkToStableVersion;
     private String downloadableElementXpath = ".//tr[contains(@class,'folder')]";
-    private DriverObject driver;
 
     public MantisPage(DriverObject _driver) {
         driver = _driver;
@@ -35,6 +34,7 @@ public class MantisPage {
         clickOnLink(linkToFiles);
         clickOnLink(linkToStableVersion);
     }
+
     private List<DownloadElementObject> returnListOfVersions() {
         List<DownloadElementObject> listOfElements = new ArrayList<>();
         for (WebElement item : driver.getDriver().findElements(By.xpath(downloadableElementXpath))) {
@@ -46,10 +46,12 @@ public class MantisPage {
         }
         return listOfElements;
     }
+
     private void clickOnLink(WebElement elementToClick) {
-        driver.waitTillElementClickable(elementToClick, 10);
+        driver.waitTillElementClickable(elementToClick, timeOuts.forCheckIfClickable);
         elementToClick.click();
     }
+
     public String returnTheVersionWithMostDownload() {
         List<DownloadElementObject> listOfElements = returnListOfVersions();
         Collections.sort(listOfElements);

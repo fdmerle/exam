@@ -9,15 +9,16 @@ import support.EnterTheStringToWebObject;
 /**
  * Created by dmytro_moskalenko2 on 2/1/2016.
  */
-public class GooglePage {
+public class GooglePage extends MainPage{
     @FindBy(xpath = ".//*[@id='lst-ib']")
     private WebElement searchRequestInputField;
     @FindBy(xpath = ".//*[@id='sblsbb']")
     private WebElement requestSubmitButton;
     @FindBy(xpath = ".//*[@id='pnnext']/span[@class='csb ch']")
     private WebElement nextButtonXpath;
-    private DriverObject driver;
     private String elementInSearchResult = ".//*[@id='rso']//h3//a";
+    private String urlToSearchFor="http://sourceforge.net/projects/mantisbt/";
+    private String linkToAnotherPage =".//*[@id='nav']//td[contains(text(), '%s')]";
 
 
     public GooglePage(DriverObject _driver) {
@@ -26,7 +27,6 @@ public class GooglePage {
     }
 
     public DriverObject getDriverObject() {
-
         return driver;
     }
 
@@ -39,7 +39,7 @@ public class GooglePage {
         EnterTheStringToWebObject stringInput = new EnterTheStringToWebObject();
         stringInput.enterValueToTextField(searchRequestInputField, textToSearch);
         requestSubmitButton.click();
-        driver.waitTillElementClickable((nextButtonXpath), 10);
+        driver.waitTillElementClickable(nextButtonXpath, timeOuts.forCheckIfClickable);
 
     }
 
@@ -59,15 +59,14 @@ public class GooglePage {
 
     private WebElement returnResultAccordinglyToSearchCriteria() {
         for (WebElement item : driver.getDriver().findElements(By.xpath(elementInSearchResult))) {
-            if (item.getAttribute("href").equals("http://sourceforge.net/projects/mantisbt/"))
+            if (item.getAttribute("href").equals(urlToSearchFor))
                 return item;
         }
         return null;
     }
 
     private void waitWhileResultPageIsLoaded(String pageNumber){
-        String linkToAntherPage=".//*[@id='nav']//td[contains(text(), '"+pageNumber+"')]";
-        driver.waitTillElementLoaded(linkToAntherPage, 5);
+        driver.waitTillElementLoaded(String.format(linkToAnotherPage,pageNumber), timeOuts.getForCheckIfLoad);
     }
 
 

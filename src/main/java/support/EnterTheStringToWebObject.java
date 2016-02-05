@@ -8,16 +8,20 @@ import org.openqa.selenium.WebElement;
 public class EnterTheStringToWebObject {
     private Boolean successOfEnter = false;
 
-    public void enterValueToTextField(WebElement textDestination, String textToEnter) {
-        int timeForWaiting = 10, i;
+    public boolean enterValueToTextField(WebElement textDestination, String textToEnter) {
+        int i;
 
-        String tmp;
+        String forCheckEnteringText="";
         textDestination.sendKeys(textToEnter);
 
         for (i = 0; i < 10; i++) {
-            tmp = textDestination.getText();
-        }
+            forCheckEnteringText = textDestination.getText();
+            if (forCheckEnteringText.equals(textToEnter)){
+                return true;
+            }
 
+        }
+        return false;
 
 
     }
